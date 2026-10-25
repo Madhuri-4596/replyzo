@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+<script>try{const t=localStorage.getItem('replyzo-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}</script>
 <style>
 /* Layout: editorial split hero (serif thesis left, live phone right), then calm full-width bands on a cool porcelain ground */
 :root{
@@ -60,6 +61,11 @@ a{color:inherit}
 .btn-ghost{background:transparent; color:var(--ink); border-color:var(--line)}
 .btn-ghost:hover{border-color:var(--ink)}
 
+.skip{position:fixed;top:-100px;left:16px;z-index:100;background:var(--surface);padding:12px 18px}.skip:focus{top:12px}
+html{scroll-padding-top:90px}
+.nav-actions{display:flex;align-items:center;gap:12px}
+.theme-toggle{border:1px solid var(--line);background:var(--surface);color:var(--ink);width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:18px;flex:none}
+@media(max-width:420px){.nav .wrap{gap:8px}.nav-actions{gap:8px}.nav .btn{font-size:12px;padding:11px}.brand{font-size:16px}.mark{width:23px;height:23px}.contact{border-radius:20px;padding:16px}.contact a{font-size:14px}}
 /* Nav */
 .nav{position:sticky; top:env(safe-area-inset-top,0px); z-index:20; background:color-mix(in srgb, var(--bg) 82%, transparent); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-bottom:1px solid var(--line)}
 .nav .wrap{display:flex; align-items:center; justify-content:space-between; gap:16px; padding-block:14px}
@@ -226,6 +232,7 @@ footer .wrap{padding-block:28px; display:flex; flex-wrap:wrap; justify-content:s
 </style>
 </head>
 <body>
+<a class="skip" href="#top">Skip to content</a>
 
 <header class="nav">
   <div class="wrap">
@@ -233,11 +240,11 @@ footer .wrap{padding-block:28px; display:flex; flex-wrap:wrap; justify-content:s
     <nav class="nav-links" aria-label="Sections">
       <a href="#leak">Your leak</a><a href="#how">How it works</a><a href="#plans">Plans</a><a href="#report">Reports</a><a href="#faq">FAQ</a>
     </nav>
-    <a class="btn btn-primary" href="#talk">Book a 10-min demo</a>
+    <div class="nav-actions"><button class="theme-toggle" id="theme" type="button" aria-label="Switch colour theme">◐</button><a class="btn btn-primary" href="mailto:madhurigade000@gmail.com?subject=Replyzo%20demo">Book a 10-min demo</a></div>
   </div>
 </header>
 
-<main id="top">
+<main id="top" tabindex="-1">
   <section class="hero">
     <div class="wrap">
       <div>
@@ -279,12 +286,12 @@ footer .wrap{padding-block:28px; display:flex; flex-wrap:wrap; justify-content:s
     <div class="wrap">
       <div class="band-head">
         <h2>How much is slow follow-up costing you?</h2>
-        <p>Put in your own numbers. This is a rough estimate of the extra revenue that faster, repeated follow-up usually brings back.</p>
+        <p>Put in your own numbers. This is a rough estimate of potential extra revenue at the recovery rate you choose.</p>
       </div>
       <div class="calc">
         <div class="calc-in">
           <div class="field">
-            <label for="niche">Your business</label>
+            <span class="label" id="businessLabel">Your business</span>
             <div class="seg" role="tablist" aria-label="Business type for calculator" id="calcSeg">
               <button role="tab" aria-selected="true" data-k="d2c">D2C brand</button>
               <button role="tab" aria-selected="false" data-k="re">Real estate</button>
@@ -311,8 +318,8 @@ footer .wrap{padding-block:28px; display:flex; flex-wrap:wrap; justify-content:s
           </div>
           <div>
             <div class="row"><span>Our monthly fee</span><b id="feeOut">₹50,000</b></div>
-            <div class="row"><span>Return on the fee</span><b id="roiOut">2.9×</b></div>
-            <p class="fine">Estimate only. Your results depend on your offer, price and how many leads you get.</p>
+            <div class="row"><span>Revenue / monthly fee</span><b id="roiOut">2.9×</b></div>
+            <p class="fine">Illustrative gross revenue, not profit. Excludes setup, taxes and WhatsApp platform/message charges. Results depend on your offer, price and lead quality.</p>
           </div>
         </div>
       </div>
@@ -337,7 +344,7 @@ footer .wrap{padding-block:28px; display:flex; flex-wrap:wrap; justify-content:s
     <div class="wrap">
       <div class="band-head">
         <h2>One system per industry, priced on results.</h2>
-        <p>Every plan includes setup, message writing, monthly testing and reporting. No lock-in after the first 60 days.</p>
+        <p>One-time setup is charged separately. Every monthly plan includes message writing, testing and reporting. No lock-in after the first 60 days.</p>
       </div>
       <div class="offers">
         <article class="offer is-on" data-k="d2c">
@@ -532,7 +539,7 @@ footer .wrap{padding-block:28px; display:flex; flex-wrap:wrap; justify-content:s
 
   /* Tabs: industry choice syncs the phone, the calculator and the plans */
   function select(group, k){
-    group.querySelectorAll("button").forEach(function(b){ b.setAttribute("aria-selected", b.dataset.k === k ? "true" : "false"); });
+    group.querySelectorAll("button").forEach(function(b){ const active=b.dataset.k===k; b.setAttribute("aria-selected", active ? "true" : "false"); b.tabIndex=active?0:-1; });
   }
   function choose(k){
     select(document.querySelector(".stage .seg"), k);
@@ -549,7 +556,7 @@ footer .wrap{padding-block:28px; display:flex; flex-wrap:wrap; justify-content:s
   document.getElementById("replay").addEventListener("click", function(){ play(current, 1); });
 
   /* Sample report chart, drawn to one scale */
-  const weeks = [3, 4, 4, 5, 8, 9, 11, 10], max = 12;
+  const weeks = [3, 4, 4, 6, 8, 9, 11, 10], max = 12;
   const bars = document.getElementById("bars"), axis = document.getElementById("axis");
   weeks.forEach(function(v, i){
     const b = el("div", "bar" + (i >= 4 ? " live" : ""));
@@ -568,7 +575,25 @@ footer .wrap{padding-block:28px; display:flex; flex-wrap:wrap; justify-content:s
     try { navigator.clipboard.writeText(txt).then(done, fallback); } catch(e){ fallback(); }
   });
 
-  setCalc("d2c");
+  document.querySelectorAll('[role="tablist"]').forEach(function(group){
+    // These controls select an industry across several regions, rather than one tab panel.
+    group.setAttribute('role','group');
+    group.querySelectorAll('button').forEach(function(b){
+      b.setAttribute('role','button'); b.setAttribute('aria-pressed',b.getAttribute('aria-selected')); b.removeAttribute('aria-selected');
+    });
+    group.addEventListener('keydown',function(e){
+      const buttons=Array.from(group.querySelectorAll('button')); let i=buttons.indexOf(document.activeElement);
+      if(!['ArrowRight','ArrowLeft','Home','End'].includes(e.key)||i<0)return;
+      e.preventDefault();i=e.key==='Home'?0:e.key==='End'?buttons.length-1:(i+(e.key==='ArrowRight'?1:-1)+buttons.length)%buttons.length;
+      buttons[i].focus();buttons[i].click();
+    });
+  });
+  const originalSelect=select;
+  select=function(group,k){originalSelect(group,k);group.querySelectorAll('button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.k===k?'true':'false');b.removeAttribute('aria-selected')})};
+  const theme=document.getElementById('theme');
+  function themeLabel(){const dark=document.documentElement.dataset.theme?document.documentElement.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;theme.setAttribute('aria-label','Switch to '+(dark?'light':'dark')+' mode');}
+  theme.addEventListener('click',function(){const dark=document.documentElement.dataset.theme?document.documentElement.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;const next=dark?'light':'dark';document.documentElement.dataset.theme=next;try{localStorage.setItem('replyzo-theme',next)}catch(e){}themeLabel()});themeLabel();
+  choose("d2c");
   play("d2c", 2);
 })();
 </script>

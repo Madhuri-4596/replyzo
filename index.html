@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Replyzo · WhatsApp follow-up for Indian businesses</title>
+<meta name="description" content="Replyzo sets up and runs WhatsApp follow-up that replies to every lead in under 60 seconds and books the visit, class or order. For D2C brands, real estate brokers and coaching institutes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+<style>
+/* Layout: editorial split hero (serif thesis left, live phone right), then calm full-width bands on a cool porcelain ground */
+:root{
+  --bg:#F1F3F6; --surface:#FFFFFF; --ink:#0F1B2D; --muted:#5A6678; --line:#DAE0E8;
+  --accent:#2347C9; --accent-ink:#FFFFFF; --accent-soft:#E3E9FB;
+  --gold:#B7791F; --gold-text:#8A5710; --gold-soft:#F7ECDA; --gold-ink:#7A4E10; --on-tint:#33427A;
+  --wall:#E8ECF2; --bubble-in:#FFFFFF; --bubble-out:#DCE5FC; --sys-bg:#D9DFE8;
+  --chat-head:#13213A; --chat-head-ink:#F2F5FA; --frame:#0C1322;
+  --glow:rgba(35,71,201,.18); --shadow:rgba(15,27,45,.16);
+  --f-display:"Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --f-body:"Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono:"Geist Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0A0F19; --surface:#111927; --ink:#E9EEF6; --muted:#94A1B5; --line:#223049;
+  --accent:#7D9BFF; --accent-ink:#0A0F19; --accent-soft:#18244A;
+  --gold:#E2A84C; --gold-text:#E8B565; --gold-soft:#2B2213; --gold-ink:#F1C988; --on-tint:#B9C6EE;
+  --wall:#0E1622; --bubble-in:#18233A; --bubble-out:#1F3570; --sys-bg:#1B2638;
+  --chat-head:#0B1220; --chat-head-ink:#E9EEF6; --frame:#05080F;
+  --glow:rgba(125,155,255,.22); --shadow:rgba(0,0,0,.5); color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0A0F19; --surface:#111927; --ink:#E9EEF6; --muted:#94A1B5; --line:#223049;
+  --accent:#7D9BFF; --accent-ink:#0A0F19; --accent-soft:#18244A;
+  --gold:#E2A84C; --gold-text:#E8B565; --gold-soft:#2B2213; --gold-ink:#F1C988; --on-tint:#B9C6EE;
+  --wall:#0E1622; --bubble-in:#18233A; --bubble-out:#1F3570; --sys-bg:#1B2638;
+  --chat-head:#0B1220; --chat-head-ink:#E9EEF6; --frame:#05080F;
+  --glow:rgba(125,155,255,.22); --shadow:rgba(0,0,0,.5); color-scheme:dark }
+
+*{box-sizing:border-box}
+html{color-scheme:light}
+:root{padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none !important}
+html{caret-color:var(--accent); scrollbar-color:var(--line) var(--bg)}
+::selection{background:var(--accent); color:var(--accent-ink)}
+a{text-underline-offset:3px}
+body{background:var(--bg); color:var(--ink); font:16px/1.6 var(--f-body); -webkit-font-smoothing:antialiased}
+body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top,0px); z-index:10; background:var(--bg)}
+h1,h2,h3{text-wrap:balance; margin:0}
+p{margin:0}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:6px}
+.wrap{max-width:1180px; margin:0 auto; padding-left:max(16px, env(safe-area-inset-left,0px)); padding-right:max(16px, env(safe-area-inset-right,0px))}
+.label{font-size:14px; font-weight:500; color:var(--on-tint)}
+.serif{font-family:var(--f-display); font-weight:400}
+.btn{display:inline-flex; align-items:center; gap:10px; padding:14px 22px; border-radius:999px; border:1px solid transparent; font:500 15px/1 var(--f-body); cursor:pointer; text-decoration:none; transition:transform .2s ease, background .2s ease}
+.btn-primary{background:var(--ink); color:var(--bg)}
+.btn-primary:hover{transform:translateY(-1px)}
+.btn-ghost{background:transparent; color:var(--ink); border-color:var(--line)}
+.btn-ghost:hover{border-color:var(--ink)}
+
+/* Nav */
+.nav{position:sticky; top:env(safe-area-inset-top,0px); z-index:20; background:color-mix(in srgb, var(--bg) 82%, transparent); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex; align-items:center; justify-content:space-between; gap:16px; padding-block:14px}
+.brand{display:flex; align-items:center; gap:10px; font:600 17px/1 var(--f-body); letter-spacing:-.01em; text-decoration:none}
+.mark{width:26px; height:26px; border-radius:8px; background:var(--ink); position:relative}
+.mark::after{content:""; position:absolute; left:7px; top:8px; width:12px; height:9px; border-radius:5px 5px 5px 1px; background:var(--bg)}
+.nav-links{display:flex; gap:28px; font-size:14px; color:var(--muted)}
+.nav-links a{text-decoration:none}
+.nav-links a:hover{color:var(--ink)}
+.nav .btn{padding:10px 16px; font-size:14px}
+
+/* Hero */
+.hero .wrap{display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:56px; align-items:center; padding-block:72px 88px}
+.hero h1{font:400 clamp(46px, 6.6vw, 94px)/.96 var(--f-display); letter-spacing:-.015em}
+.hero h1 em{font-style:italic; color:var(--accent)}
+.lede{margin-top:26px; max-width:52ch; font-size:18px; color:var(--muted)}
+.hero-cta{display:flex; flex-wrap:wrap; gap:12px; margin-top:34px}
+.proof{display:flex; flex-wrap:wrap; gap:28px; margin-top:44px; padding-top:26px; border-top:1px solid var(--line)}
+.proof div{display:grid; gap:4px}
+.proof b{font:600 15px/1.2 var(--f-body)}
+.proof span{font-size:13px; color:var(--muted)}
+
+/* Phone */
+.stage{display:grid; justify-items:center; gap:18px; position:relative; min-width:0}
+.seg{display:inline-flex; padding:4px; border-radius:999px; background:var(--surface); border:1px solid var(--line); max-width:100%; overflow-x:auto}
+.seg button{border:0; background:transparent; color:var(--muted); font:500 13px/1 var(--f-body); padding:10px 14px; border-radius:999px; cursor:pointer; white-space:nowrap}
+.seg button[aria-selected="true"]{background:var(--ink); color:var(--bg)}
+.phone{width:340px; max-width:100%; height:640px; border-radius:46px; background:var(--frame); padding:11px; box-shadow:0 40px 80px -30px var(--shadow), 0 0 0 1px color-mix(in srgb, var(--ink) 10%, transparent)}
+.screen{height:100%; border-radius:36px; overflow:hidden; background:var(--wall); display:flex; flex-direction:column}
+.chat-head{background:var(--chat-head); color:var(--chat-head-ink); display:flex; align-items:center; gap:10px; padding:30px 16px 12px}
+.avatar{width:34px; height:34px; border-radius:50%; display:grid; place-items:center; font:600 14px/1 var(--f-body); background:var(--gold); color:var(--frame); flex:none}
+.chat-head b{display:block; font-size:14px; font-weight:600}
+.chat-head small{font-size:11.5px; opacity:.7}
+.chat-body{flex:1; overflow-y:auto; padding:14px 12px; display:flex; flex-direction:column; gap:7px; scroll-behavior:smooth; scrollbar-width:none}
+.chat-body::-webkit-scrollbar{display:none}
+.msg{max-width:84%; padding:8px 10px 5px; border-radius:14px; font-size:13.5px; line-height:1.42; color:var(--ink); box-shadow:0 1px 0 color-mix(in srgb, var(--ink) 8%, transparent); animation:rise .35s ease both}
+.msg.in{align-self:flex-start; background:var(--bubble-in); border-top-left-radius:4px}
+.msg.out{align-self:flex-end; background:var(--bubble-out); border-top-right-radius:4px}
+.msg time{display:block; text-align:right; margin-top:2px; font:400 10px/1.4 var(--f-mono); color:var(--muted)}
+.msg .ai{font:500 9.5px/1 var(--f-mono); letter-spacing:.08em; color:var(--accent); text-transform:uppercase; display:block; margin-bottom:4px}
+.tile{margin:6px 0 2px; border-radius:10px; background:var(--surface); border:1px solid var(--line); padding:8px 10px; display:grid; gap:2px}
+.tile b{font-size:12.5px}
+.tile span{font:400 11.5px/1.4 var(--f-mono); color:var(--muted)}
+.sys{align-self:center; font:400 10.5px/1.3 var(--f-mono); color:var(--muted); background:var(--sys-bg); padding:5px 10px; border-radius:999px; text-align:center; animation:rise .35s ease both}
+.result{align-self:center; margin-top:6px; font:500 11.5px/1.3 var(--f-mono); color:var(--gold-ink); background:var(--gold-soft); border:1px solid color-mix(in srgb, var(--gold) 40%, transparent); padding:8px 12px; border-radius:10px; text-align:center; animation:rise .4s ease both}
+.typing{align-self:flex-end; background:var(--bubble-out); border-radius:14px; border-top-right-radius:4px; padding:11px 13px; display:flex; gap:4px}
+.typing i{width:6px; height:6px; border-radius:50%; background:var(--muted); animation:blink 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s} .typing i:nth-child(3){animation-delay:.3s}
+.composer{display:flex; gap:8px; align-items:center; padding:10px 12px 16px}
+.composer div{flex:1; height:36px; border-radius:999px; background:var(--bubble-in); font-size:12.5px; color:var(--muted); display:flex; align-items:center; padding:0 14px}
+.composer span{width:36px; height:36px; border-radius:50%; background:var(--accent); flex:none}
+.stage-foot{display:flex; gap:14px; align-items:center; font-size:12.5px; color:var(--muted)}
+.linkish{background:none; border:0; padding:0; font:inherit; color:var(--ink); text-decoration:underline; text-underline-offset:3px; cursor:pointer}
+@keyframes rise{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}
+@keyframes blink{0%,100%{opacity:.25} 50%{opacity:1}}
+
+/* Bands */
+.band{border-top:1px solid var(--line)}
+.band .wrap{padding-block:96px}
+.band-head{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:40px; align-items:end; margin-bottom:52px}
+.band-head h2{font:400 clamp(36px, 4.6vw, 60px)/1 var(--f-display); letter-spacing:-.01em; max-width:14ch}
+.band-head p{color:var(--muted); max-width:46ch; justify-self:end}
+
+/* Leak calculator */
+.calc{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:0; border:1px solid var(--line); border-radius:24px; overflow:hidden; background:var(--surface)}
+.calc-in{padding:36px; display:grid; gap:26px; border-right:1px solid var(--line)}
+.field{display:grid; gap:10px}
+.field label{font-size:14px; font-weight:500; display:flex; justify-content:space-between; gap:12px}
+.field label output{font:500 14px/1 var(--f-mono); color:var(--accent); font-variant-numeric:tabular-nums}
+.field input[type=number]{width:100%; padding:14px 16px; border-radius:12px; border:1px solid var(--line); background:var(--bg); color:var(--ink); font:500 17px/1 var(--f-mono); font-variant-numeric:tabular-nums}
+.field input[type=range]{width:100%; accent-color:var(--accent)}
+.calc-out{padding:36px; display:flex; flex-direction:column; justify-content:space-between; gap:28px; background:var(--accent-soft)}
+.big{font:400 clamp(52px, 7vw, 92px)/.95 var(--f-display); letter-spacing:-.02em; font-variant-numeric:tabular-nums}
+.calc-out .row{display:flex; justify-content:space-between; gap:12px; padding-block:12px; border-top:1px solid color-mix(in srgb, var(--accent) 22%, transparent); font-size:14px}
+.calc-out .row b{font:500 15px/1.3 var(--f-mono); font-variant-numeric:tabular-nums}
+.fine{font-size:12.5px; color:var(--on-tint)}
+
+/* Steps */
+.steps{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:0; border-top:1px solid var(--ink)}
+.step{padding:28px 28px 0 0; display:grid; gap:12px; align-content:start}
+.step + .step{padding-left:28px; border-left:1px solid var(--line)}
+.step .when{font:500 12px/1 var(--f-mono); letter-spacing:.1em; text-transform:uppercase; color:var(--gold-text)}
+.step h3{font:400 30px/1.1 var(--f-display)}
+.step p{color:var(--muted); font-size:15px}
+
+/* Offers */
+.offers{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); border-top:1px solid var(--ink)}
+.offer{padding:30px 28px 34px; display:flex; flex-direction:column; gap:20px; transition:background .3s ease}
+.offer + .offer{border-left:1px solid var(--line)}
+.offer.is-on{background:var(--surface)}
+.offer h3{font:400 32px/1.05 var(--f-display)}
+.offer .for{font-size:14px; color:var(--muted)}
+.price{display:flex; align-items:baseline; gap:8px; padding-block:16px; border-block:1px solid var(--line)}
+.price b{font:500 30px/1 var(--f-mono); letter-spacing:-.03em; font-variant-numeric:tabular-nums}
+.price span{font-size:13px; color:var(--muted)}
+.offer ul{list-style:none; margin:0; padding:0; display:grid; gap:10px; font-size:14.5px}
+.offer li{display:grid; grid-template-columns:16px minmax(0,1fr); gap:10px}
+.offer li::before{content:""; width:8px; height:8px; margin-top:8px; border-radius:2px; background:var(--accent)}
+.promise{margin-top:auto; padding:14px 16px; border-radius:14px; background:var(--gold-soft); color:var(--gold-ink); font-size:13.5px; line-height:1.5}
+.promise b{display:block; font:500 11px/1 var(--f-mono); letter-spacing:.1em; text-transform:uppercase; margin-bottom:6px}
+
+/* Report */
+.report{background:var(--surface); border:1px solid var(--line); border-radius:24px; padding:34px; display:grid; gap:30px}
+.report-top{display:flex; flex-wrap:wrap; justify-content:space-between; gap:12px; align-items:baseline}
+.report-top h3{font:400 30px/1.1 var(--f-display)}
+.tag{font:500 11px/1 var(--f-mono); letter-spacing:.1em; text-transform:uppercase; padding:7px 10px; border-radius:999px; border:1px solid var(--line); color:var(--muted)}
+.kpis{display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:0; border-block:1px solid var(--line)}
+.kpi{padding:22px 20px 22px 0; display:grid; gap:8px}
+.kpi + .kpi{padding-left:20px; border-left:1px solid var(--line)}
+.kpi span{font-size:13px; color:var(--muted)}
+.kpi b{font:500 30px/1 var(--f-mono); letter-spacing:-.03em; font-variant-numeric:tabular-nums}
+.kpi em{font:normal 500 12.5px/1 var(--f-mono); color:var(--gold-text)}
+.chart{display:grid; gap:12px}
+.chart-title{display:flex; justify-content:space-between; gap:12px; font-size:14px}
+.chart-title span{color:var(--muted); font-size:13px}
+.bars{display:grid; grid-template-columns:repeat(8, minmax(0,1fr)); gap:10px; height:200px; align-items:end; position:relative; padding-top:22px; background:repeating-linear-gradient(to top, var(--line) 0 1px, transparent 1px 50px)}
+.bar{position:relative; border-radius:6px 6px 2px 2px; background:var(--sys-bg)}
+.bar.live{background:var(--accent)}
+.bar b{position:absolute; top:-20px; left:0; right:0; text-align:center; font:500 12px/1 var(--f-mono); font-variant-numeric:tabular-nums}
+.axis{display:grid; grid-template-columns:repeat(8, minmax(0,1fr)); gap:10px; font:400 11px/1 var(--f-mono); color:var(--muted); text-align:center}
+.legend{display:flex; gap:18px; font-size:12.5px; color:var(--muted)}
+.legend i{display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:6px; vertical-align:-1px}
+
+/* FAQ */
+.faq{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:0 48px}
+.faq details{border-top:1px solid var(--line); padding-block:22px}
+.faq summary{cursor:pointer; list-style:none; display:flex; justify-content:space-between; gap:16px; font:400 23px/1.25 var(--f-display)}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+"; font:300 22px/1 var(--f-body); color:var(--muted); transition:transform .2s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{margin-top:12px; color:var(--muted); font-size:15px; max-width:58ch}
+
+/* CTA */
+.cta{background:var(--ink); color:var(--bg)}
+.cta .wrap{padding-block:104px; display:grid; gap:28px; justify-items:start}
+.cta h2{font:400 clamp(42px, 6.2vw, 86px)/.98 var(--f-display); letter-spacing:-.015em; max-width:16ch}
+.cta h2 em{font-style:italic; color:var(--gold)}
+.cta p{max-width:52ch; opacity:.72; font-size:17px}
+.contact{display:flex; flex-wrap:wrap; align-items:center; gap:12px; padding:10px 10px 10px 22px; border-radius:999px; border:1px solid color-mix(in srgb, var(--bg) 25%, transparent)}
+.contact a{font:500 18px/1.3 var(--f-mono); letter-spacing:.01em; color:inherit; text-decoration:none; overflow-wrap:anywhere; min-width:0}
+.contact a:hover{text-decoration:underline}
+.contact button{border:0; border-radius:999px; padding:12px 18px; font:500 14px/1 var(--f-body); background:var(--bg); color:var(--ink); cursor:pointer}
+footer .wrap{padding-block:28px; display:flex; flex-wrap:wrap; justify-content:space-between; gap:12px; font-size:12.5px; color:var(--muted)}
+
+@media (max-width: 920px){
+  .hero .wrap{grid-template-columns:minmax(0,1fr); gap:48px; padding-block:48px 64px}
+  .band-head{grid-template-columns:minmax(0,1fr)} .band-head p{justify-self:start}
+  .calc{grid-template-columns:minmax(0,1fr)} .calc-in{border-right:0; border-bottom:1px solid var(--line)}
+  .steps,.offers{grid-template-columns:minmax(0,1fr)}
+  .offer + .offer{border-left:0; border-top:1px solid var(--line)}
+  .step,.step + .step{padding:24px 0; border-left:0; border-bottom:1px solid var(--line)}
+  .kpis{grid-template-columns:repeat(2, minmax(0,1fr))}
+  .kpi,.kpi + .kpi{padding:18px 12px 18px 0; border-left:0}
+  .faq{grid-template-columns:minmax(0,1fr)}
+  .nav-links{display:none}
+  .band .wrap{padding-block:72px}
+}
+@media (max-width: 420px){
+  .phone{height:600px; border-radius:40px} .screen{border-radius:30px}
+  .calc-in,.calc-out,.report,.offer{padding:22px}
+  .bars{gap:6px} .axis{gap:6px}
+}
+@media (prefers-reduced-motion: reduce){ *,*::before,*::after{animation:none !important; transition:none !important; scroll-behavior:auto !important} }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top"><span class="mark" aria-hidden="true"></span>Replyzo</a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#leak">Your leak</a><a href="#how">How it works</a><a href="#plans">Plans</a><a href="#report">Reports</a><a href="#faq">FAQ</a>
+    </nav>
+    <a class="btn btn-primary" href="#talk">Book a 10-min demo</a>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <h1>Every lead gets a reply in <em>sixty seconds.</em> Then we follow up until they buy.</h1>
+        <p class="lede">Most businesses pay for leads and then answer them late, once, or never. We set up and run WhatsApp follow-up that replies instantly, answers questions, and books the visit, class or order. You get a rupee report every month.</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#talk">Book a 10-min demo</a>
+          <a class="btn btn-ghost" href="#leak">See what you're losing</a>
+        </div>
+        <div class="proof">
+          <div><b>&lt; 60 s</b><span>first reply, day or night</span></div>
+          <div><b>Day 1 · 3 · 7 · 30</b><span>follow-ups, written for your customers</span></div>
+          <div><b>7 days</b><span>from kickoff to live</span></div>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="seg" role="tablist" aria-label="Choose an industry">
+          <button role="tab" id="tab-d2c" aria-selected="true" data-k="d2c">D2C brands</button>
+          <button role="tab" id="tab-re" aria-selected="false" data-k="re">Real estate</button>
+          <button role="tab" id="tab-co" aria-selected="false" data-k="co">Coaching</button>
+        </div>
+        <div class="phone" aria-label="Sample WhatsApp conversation">
+          <div class="screen">
+            <div class="chat-head">
+              <div class="avatar" id="av">K</div>
+              <div><b id="cname">Kavya Naturals</b><small id="csub">Business account · replies instantly</small></div>
+            </div>
+            <div class="chat-body" id="chat" aria-live="polite"></div>
+            <div class="composer" aria-hidden="true"><div>Message</div><span></span></div>
+          </div>
+        </div>
+        <div class="stage-foot"><span>Sample conversation</span><button class="linkish" id="replay" type="button">Replay</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="leak">
+    <div class="wrap">
+      <div class="band-head">
+        <h2>How much is slow follow-up costing you?</h2>
+        <p>Put in your own numbers. This is a rough estimate of the extra revenue that faster, repeated follow-up usually brings back.</p>
+      </div>
+      <div class="calc">
+        <div class="calc-in">
+          <div class="field">
+            <label for="niche">Your business</label>
+            <div class="seg" role="tablist" aria-label="Business type for calculator" id="calcSeg">
+              <button role="tab" aria-selected="true" data-k="d2c">D2C brand</button>
+              <button role="tab" aria-selected="false" data-k="re">Real estate</button>
+              <button role="tab" aria-selected="false" data-k="co">Coaching</button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="v1" id="l1">Abandoned carts a month</label>
+            <input id="v1" type="number" min="0" inputmode="numeric">
+          </div>
+          <div class="field">
+            <label for="v2" id="l2">Average order value (₹)</label>
+            <input id="v2" type="number" min="0" inputmode="numeric">
+          </div>
+          <div class="field">
+            <label for="rate"><span id="l3">Carts recovered</span><output id="rateOut" for="rate">8%</output></label>
+            <input id="rate" type="range" min="0.5" max="20" step="0.5">
+          </div>
+        </div>
+        <div class="calc-out">
+          <div>
+            <p class="label">Estimated extra revenue each month</p>
+            <p class="big" id="bigOut">₹1.44 lakh</p>
+          </div>
+          <div>
+            <div class="row"><span>Our monthly fee</span><b id="feeOut">₹50,000</b></div>
+            <div class="row"><span>Return on the fee</span><b id="roiOut">2.9×</b></div>
+            <p class="fine">Estimate only. Your results depend on your offer, price and how many leads you get.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="how">
+    <div class="wrap">
+      <div class="band-head">
+        <h2>Three steps. You do almost none of them.</h2>
+        <p>You don't change your website, your software or your team. We plug into what you already use.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><span class="when">Day 1</span><h3>Free leak audit</h3><p>We enquire at your business like a real customer, time your reply, and show you on a short video where leads go cold.</p></div>
+        <div class="step"><span class="when">Days 2 to 7</span><h3>We build it</h3><p>Instant replies, follow-ups and booking, written in your tone, in English and Hinglish. Connected to your forms, ads, Shopify or lead portals.</p></div>
+        <div class="step"><span class="when">Every month</span><h3>We run it and report</h3><p>We test the messages, fix what isn't working, and send you one report: leads, replies, bookings and rupees brought back.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="plans">
+    <div class="wrap">
+      <div class="band-head">
+        <h2>One system per industry, priced on results.</h2>
+        <p>Every plan includes setup, message writing, monthly testing and reporting. No lock-in after the first 60 days.</p>
+      </div>
+      <div class="offers">
+        <article class="offer is-on" data-k="d2c">
+          <div><h3>Cart Recovery</h3><p class="for">For Shopify and D2C brands</p></div>
+          <div class="price"><b>₹50,000</b><span>a month · ₹50,000 setup</span></div>
+          <ul>
+            <li>Abandoned-cart reminders at 1 hour, 1 day and 3 days</li>
+            <li>COD confirmation to cut returned orders</li>
+            <li>Repeat-purchase reminders before products run out</li>
+            <li>AI replies to "where is my order" and sizing questions</li>
+          </ul>
+          <p class="promise"><b>Our promise</b>At least ₹2 lakh in recovered sales in 60 days, or we keep working free until you get it.</p>
+        </article>
+        <article class="offer" data-k="re">
+          <div><h3>Lead Follow-up</h3><p class="for">For brokers and builders</p></div>
+          <div class="price"><b>₹35,000</b><span>a month · ₹30,000 setup</span></div>
+          <ul>
+            <li>Reply to every portal and ad lead in under 60 seconds</li>
+            <li>AI asks budget, area and timeline, and flags serious buyers</li>
+            <li>Site-visit booking with reminders the day before</li>
+            <li>Follow-ups at day 2, 7 and 30 for leads that go quiet</li>
+          </ul>
+          <p class="promise"><b>Our promise</b>Twice the site visits from the same leads in 60 days, or your fee back.</p>
+        </article>
+        <article class="offer" data-k="co">
+          <div><h3>Admissions Engine</h3><p class="for">For NEET, JEE and IELTS institutes</p></div>
+          <div class="price"><b>₹30,000</b><span>a month · ₹40,000 setup</span></div>
+          <ul>
+            <li>Instant reply with fees, batches and results</li>
+            <li>Separate follow-ups for the student and the parent</li>
+            <li>Free demo-class booking with reminders</li>
+            <li>Weekly report: enquiries, demos, admissions</li>
+          </ul>
+          <p class="promise"><b>Our promise</b>20% more admissions from the same enquiries this season, or next month is free.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="report">
+    <div class="wrap">
+      <div class="band-head">
+        <h2>You see the rupees, every month.</h2>
+        <p>No dashboards to learn. One short report that shows what the system did and what it earned you.</p>
+      </div>
+      <div class="report">
+        <div class="report-top"><h3>October report · Anand Realty, Wakad</h3><span class="tag">Sample report</span></div>
+        <div class="kpis">
+          <div class="kpi"><span>Leads received</span><b>312</b><em>all replied to</em></div>
+          <div class="kpi"><span>Median first reply</span><b>0:41</b><em>was 3 h 20 m</em></div>
+          <div class="kpi"><span>Serious buyers flagged</span><b>141</b><em>45% of leads</em></div>
+          <div class="kpi"><span>Site visits booked</span><b>38</b><em>+124% vs Sept</em></div>
+        </div>
+        <div class="chart">
+          <div class="chart-title"><b>Site visits per week</b><span>Weeks 1 to 8</span></div>
+          <div class="bars" id="bars"></div>
+          <div class="axis" id="axis"></div>
+          <div class="legend"><span><i style="background:var(--sys-bg)"></i>Before Replyzo</span><span><i style="background:var(--accent)"></i>After going live</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="faq">
+    <div class="wrap">
+      <div class="band-head">
+        <h2>What owners ask us first.</h2>
+      </div>
+      <div class="faq">
+        <details><summary>Isn't this just a WhatsApp tool I could buy?</summary><p>You can buy the tool. Most owners never set it up, write the messages, or check if it works. We do all of that and answer for the result every month.</p></details>
+        <details><summary>Will it sound like a robot?</summary><p>We write every message in your tone, in English or Hinglish. The AI only answers questions you approve, and passes anything unusual to your team.</p></details>
+        <details><summary>Do I need to change my software?</summary><p>No. We connect to what you already use: Shopify, your website forms, Facebook and Instagram ads, 99acres, MagicBricks, or a Google Sheet.</p></details>
+        <details><summary>What if it doesn't work?</summary><p>Every plan has a written 60-day promise. If we miss it, we work free or refund the fee, depending on the plan.</p></details>
+        <details><summary>How long until it's live?</summary><p>Seven days from kickoff for most businesses. You approve every message before it goes out.</p></details>
+        <details><summary>Is my customer data safe?</summary><p>We use the official WhatsApp Business platform, send only to people who contacted you, and never share or sell your data.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta" id="talk">
+    <div class="wrap">
+      <h2>Tell us about your business. We'll show you <em>where leads go cold.</em></h2>
+      <p>Email us your business name and website. We'll book a 10-minute call, and before it we'll enquire at your business like a customer and show you exactly where leads go cold. The audit is free.</p>
+      <div class="contact"><a id="num" href="mailto:madhurigade000@gmail.com?subject=Free%20leak%20audit">madhurigade000@gmail.com</a><button type="button" id="copy">Copy email</button></div>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap"><span>© 2026 Replyzo</span><span>Conversations, businesses and numbers shown on this page are examples.</span></div></footer>
+
+<script>
+(function(){
+  const S = {
+    d2c:{ name:"Kavya Naturals", av:"K", sub:"Business account · replies instantly", msgs:[
+      {t:"sys", x:"Cart left at 9:14 pm · ₹1,840"},
+      {t:"out", x:"Hi Priya, you left the Kumkumadi Night Serum in your cart. Still thinking it over? Your cart is saved here: kavya.in/c/8F2", at:"10:14 pm"},
+      {t:"in", x:"is it ok for oily skin?", at:"10:21 pm"},
+      {t:"out", ai:1, x:"Yes. It's a light oil that absorbs in a few minutes. Most customers with oily skin use 2 drops at night only.", at:"10:21 pm"},
+      {t:"in", x:"delivery charges?", at:"10:23 pm"},
+      {t:"out", ai:1, x:"Free delivery above ₹999, so you're covered. And 10% off if you order in the next 2 hours: code KAVYA10", at:"10:23 pm"},
+      {t:"in", x:"done, ordered 👍", at:"10:31 pm"},
+      {t:"out", x:"Order #4471 confirmed. It's cash on delivery, so please reply YES if you'll be home on Thursday.", at:"10:31 pm"},
+      {t:"in", x:"YES", at:"10:32 pm"}
+    ], result:"Recovered ₹1,656 · 1 h 18 m after the cart was left" },
+    re:{ name:"Anand Realty", av:"A", sub:"Business account · Wakad, Pune", msgs:[
+      {t:"sys", x:"New lead from 99acres · 2 BHK, Wakad · 6:02 pm"},
+      {t:"out", ai:1, x:"Hi Rahul, thanks for asking about the 2 BHK in Wakad. Three quick questions so I send you the right flats. What's your budget?", at:"6:02 pm"},
+      {t:"in", x:"around 85L", at:"6:04 pm"},
+      {t:"out", ai:1, x:"Got it. Do you need ready-to-move, or is possession in 6 to 12 months fine?", at:"6:04 pm"},
+      {t:"in", x:"ready in 6 months max", at:"6:05 pm"},
+      {t:"out", ai:1, x:"Three flats match. Here's the closest one:", tile:["2 BHK · 980 sq ft · 7th floor", "₹82.5 L · possession Mar 2027"], at:"6:05 pm"},
+      {t:"out", x:"Want to see it this Saturday? 11 am or 4 pm?", at:"6:05 pm"},
+      {t:"in", x:"4 pm", at:"6:07 pm"},
+      {t:"out", x:"Booked: Saturday 4:00 pm with Amit from our team. I'll send the location pin that morning.", at:"6:07 pm"}
+    ], result:"Site visit booked · 5 minutes after the enquiry" },
+    co:{ name:"Vidya NEET Academy", av:"V", sub:"Business account · Kota", msgs:[
+      {t:"sys", x:"Enquiry from Instagram · NEET 2027 batch · 8:40 pm"},
+      {t:"out", ai:1, x:"Namaste! Thanks for asking about our NEET 2027 batch. Are you the student or a parent?", at:"8:40 pm"},
+      {t:"in", x:"parent. what are the fees", at:"8:43 pm"},
+      {t:"out", ai:1, x:"Full-year classroom programme:", tile:["NEET 2027 · Classroom", "₹1,45,000 · 3 instalments · starts 5 Jan"], at:"8:43 pm"},
+      {t:"in", x:"can my daughter attend one class first?", at:"8:45 pm"},
+      {t:"out", ai:1, x:"Of course. There's a free demo class this Sunday at 10 am, Physics with Sharma sir. What's her name so I can book it?", at:"8:45 pm"},
+      {t:"in", x:"Ananya", at:"8:46 pm"},
+      {t:"out", x:"Booked: Ananya, Sunday 10:00 am. I'll remind you both on Saturday evening.", at:"8:46 pm"}
+    ], result:"Demo class booked · parent and student both followed up" }
+  };
+
+  const chat = document.getElementById("chat");
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let run = 0, current = "d2c";
+
+  function bottom(){ chat.scrollTop = chat.scrollHeight; }
+  function el(tag, cls, text){ const n = document.createElement(tag); if(cls) n.className = cls; if(text != null) n.textContent = text; return n; }
+  function add(m){
+    if(m.t === "sys"){ chat.appendChild(el("div","sys",m.x)); bottom(); return; }
+    const b = el("div", "msg " + m.t);
+    if(m.ai) b.appendChild(el("span","ai","AI reply"));
+    b.appendChild(document.createTextNode(m.x));
+    if(m.tile){ const t = el("div","tile"); t.appendChild(el("b",null,m.tile[0])); t.appendChild(el("span",null,m.tile[1])); b.appendChild(t); }
+    b.appendChild(el("time",null,m.at));
+    chat.appendChild(b); bottom();
+  }
+  function play(k, instant){
+    const my = ++run, s = S[k]; let i = 0;
+    current = k; chat.textContent = "";
+    document.getElementById("cname").textContent = s.name;
+    document.getElementById("csub").textContent = s.sub;
+    document.getElementById("av").textContent = s.av;
+    (function next(){
+      if(my !== run) return;
+      if(i >= s.msgs.length){ chat.appendChild(el("div","result",s.result)); bottom(); return; }
+      const m = s.msgs[i++];
+      if(reduce || i <= instant){ add(m); next(); return; }
+      if(m.t === "out"){
+        const ty = el("div","typing"); ty.innerHTML = "<i></i><i></i><i></i>"; chat.appendChild(ty); bottom();
+        setTimeout(function(){ if(my !== run) return; ty.remove(); add(m); setTimeout(next, 650); }, 1100);
+      } else {
+        setTimeout(function(){ if(my !== run) return; add(m); setTimeout(next, 450); }, 900);
+      }
+    })();
+  }
+
+  /* Calculator */
+  const P = {
+    d2c:{l1:"Abandoned carts a month", v1:1200, l2:"Average order value (₹)", v2:1500, l3:"Carts recovered", r:8, fee:50000},
+    re:{l1:"Leads a month", v1:300, l2:"Your commission per deal (₹)", v2:150000, l3:"Extra leads that close", r:1, fee:35000},
+    co:{l1:"Enquiries a month", v1:400, l2:"Fee per admission (₹)", v2:60000, l3:"Extra enquiries that join", r:2, fee:30000}
+  };
+  const v1 = document.getElementById("v1"), v2 = document.getElementById("v2"), rate = document.getElementById("rate");
+  let calcK = "d2c";
+  function inr(n){
+    if(n >= 1e7) return "₹" + (n/1e7).toFixed(2) + " crore";
+    if(n >= 1e5) return "₹" + (n/1e5).toFixed(2) + " lakh";
+    return "₹" + Math.round(n).toLocaleString("en-IN");
+  }
+  function calc(){
+    const a = Math.max(0, +v1.value || 0), b = Math.max(0, +v2.value || 0), r = +rate.value;
+    const out = a * b * r / 100, fee = P[calcK].fee;
+    document.getElementById("rateOut").textContent = r + "%";
+    document.getElementById("bigOut").textContent = inr(out);
+    document.getElementById("feeOut").textContent = "₹" + fee.toLocaleString("en-IN");
+    document.getElementById("roiOut").textContent = (out / fee).toFixed(1) + "×";
+  }
+  function setCalc(k){
+    calcK = k; const p = P[k];
+    document.getElementById("l1").textContent = p.l1;
+    document.getElementById("l2").textContent = p.l2;
+    document.getElementById("l3").textContent = p.l3;
+    v1.value = p.v1; v2.value = p.v2; rate.value = p.r; calc();
+  }
+  [v1, v2, rate].forEach(function(n){ n.addEventListener("input", calc); });
+
+  /* Tabs: industry choice syncs the phone, the calculator and the plans */
+  function select(group, k){
+    group.querySelectorAll("button").forEach(function(b){ b.setAttribute("aria-selected", b.dataset.k === k ? "true" : "false"); });
+  }
+  function choose(k){
+    select(document.querySelector(".stage .seg"), k);
+    select(document.getElementById("calcSeg"), k);
+    document.querySelectorAll(".offer").forEach(function(o){ o.classList.toggle("is-on", o.dataset.k === k); });
+    setCalc(k);
+  }
+  document.querySelector(".stage .seg").addEventListener("click", function(e){
+    const b = e.target.closest("button"); if(!b) return; choose(b.dataset.k); play(b.dataset.k, 1);
+  });
+  document.getElementById("calcSeg").addEventListener("click", function(e){
+    const b = e.target.closest("button"); if(!b) return; choose(b.dataset.k); play(b.dataset.k, 1);
+  });
+  document.getElementById("replay").addEventListener("click", function(){ play(current, 1); });
+
+  /* Sample report chart, drawn to one scale */
+  const weeks = [3, 4, 4, 5, 8, 9, 11, 10], max = 12;
+  const bars = document.getElementById("bars"), axis = document.getElementById("axis");
+  weeks.forEach(function(v, i){
+    const b = el("div", "bar" + (i >= 4 ? " live" : ""));
+    b.style.height = (v / max * 100) + "%";
+    b.appendChild(el("b", null, v));
+    b.setAttribute("aria-label", "Week " + (i+1) + ": " + v + " site visits");
+    bars.appendChild(b);
+    axis.appendChild(el("span", null, "W" + (i+1)));
+  });
+
+  /* Copy number */
+  document.getElementById("copy").addEventListener("click", function(){
+    const btn = this, txt = document.getElementById("num").textContent;
+    function done(){ btn.textContent = "Copied"; setTimeout(function(){ btn.textContent = "Copy email"; }, 1600); }
+    function fallback(){ const r = document.createRange(); r.selectNodeContents(document.getElementById("num")); const s = window.getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = "Selected, press copy"; }
+    try { navigator.clipboard.writeText(txt).then(done, fallback); } catch(e){ fallback(); }
+  });
+
+  setCalc("d2c");
+  play("d2c", 2);
+})();
+</script>
+</body>
+</html>
